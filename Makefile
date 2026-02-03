@@ -154,7 +154,7 @@ ifeq ($(TARGET),)
 
 all:
 	@echo "ERROR: TARGET must be set via config.mak or command line." >&2
-	@echo "Example: TARGET=x86_64-linux-musl" >&2
+	@echo "       Example: TARGET=x86_64-linux-musl" >&2
 	@exit 1
 
 else

@@ -1,6 +1,7 @@
 
 OUTPUT = $(CURDIR)/output
 
+# Source directory configuration - these must be set by the caller
 BINUTILS_SRCDIR = BINUTILS_SRCDIR_not_set
 GCC_SRCDIR = GCC_SRCDIR_not_set
 MUSL_SRCDIR = MUSL_SRCDIR_not_set
@@ -55,6 +56,8 @@ MAKE += MULTILIB_OSDIRNAMES=
 MAKE += INFO_DEPS= infodir=
 MAKE += ac_cv_prog_lex_root=lex.yy
 MAKE += MAKEINFO=false
+
+# Optimize builds by skipping verbose tar output and documentation generation
 
 FULL_BINUTILS_CONFIG = \
 	--disable-separate-code \

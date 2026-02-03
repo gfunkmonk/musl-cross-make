@@ -36,8 +36,9 @@ mv "$1$2" "$1.$2.orig"
 mv "$1$2.tmp.$$" "$1$2"
 ( cd "$1$2" && ln -s ../".$2.orig"/* . )
 else
-cp "$1" "$1.tmp.$$"
-mv "$1.tmp.$$" "$1"
+temp_file="$1.tmp.$$"
+cp "$1" "$temp_file"
+mv "$temp_file" "$1"
 fi
 }
 
@@ -62,7 +63,7 @@ done
 while IFS= read -r l ; do
 case "$l" in
 +++*)
-IFS=" 	" read -r junk pfile junk <<EOF
+IFS=" 	" read -r _ pfile _ <<EOF
 $l
 EOF
 i=0; while test "$i" -lt "$plev" ; do pfile=${pfile#*/}; i=$((i+1)) ; done
@@ -71,12 +72,12 @@ echo "$l"
 ;;
 @@*)
 echo "$l"
-IFS=" " read -r junk i j junk <<EOF
+IFS=" " read -r _ i j _ <<EOF
 $l
 EOF
 case "$i" in *,*) i=${i#*,} ;; *) i=1 ;; esac
 case "$j" in *,*) j=${j#*,} ;; *) j=1 ;; esac
-while test $i -gt 0 || test $j -gt 0 ; do
+while test "$i" -gt 0 || test "$j" -gt 0 ; do
 IFS= read -r l
 echo "$l"
 case "$l" in
@@ -94,8 +95,9 @@ done
 gotcmd=0
 while getopts ":p:i:RNEI:S:" opt ; do
 case "$opt" in
-I) find "$OPTARG" -path "$OPTARG/*" -prune -exec sh -c 'ln -sf "$@" .' sh {} + ; gotcmd=1 ;;
+I) find "$OPTARG" -path "$OPTARG/*" -prune -exec sh -c 'ln -sf "$@" -- .' sh {} + ; gotcmd=1 ;;
 S) cowp "$OPTARG" ; gotcmd=1 ;;
+*) ;;
 esac
 done
 test "$gotcmd" -eq 0 || exit 0
